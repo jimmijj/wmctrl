@@ -857,17 +857,18 @@ static int window_move_resize (Display *disp, Window win, char *arg) {/*{{{*/
    
     if (wm_supports(disp, "_NET_MOVERESIZE_WINDOW")){
         return client_msg(disp, win, "_NET_MOVERESIZE_WINDOW", 
-            grflags, (unsigned long)x, (unsigned long)y, (unsigned long)w, (unsigned long)h);
+            grflags, x, y, (unsigned long)w, (unsigned long)h);
     }
     else {
         p_verbose("WM doesn't support _NET_MOVERESIZE_WINDOW. Gravity will be ignored.\n");
         if ((w < 1 || h < 1) && (x >= 0 && y >= 0)) {
             XMoveWindow(disp, win, x, y);
         }
-        else if ((x < 0 || y < 0) && (w >= 1 && h >= -1)) {
+        else if ((x < -9999 || y < -9999) && (w >= 1 && h >= -1)) {
             XResizeWindow(disp, win, w, h);
         }
-        else if (x >= 0 && y >= 0 && w >= 1 && h >= 1) {
+        // else if (x >= 0 && y >= 0 && w >= 1 && h >= 1) {
+	else {
             XMoveResizeWindow(disp, win, x, y, w, h);
         }
         return EXIT_SUCCESS;
